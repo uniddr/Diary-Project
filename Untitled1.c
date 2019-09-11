@@ -78,6 +78,9 @@ int main(int argc,char *argv[])
         case 1:
             addnote();
             break;
+            case 2:
+                editnote();
+                break;
 
         default:
             printf("\nWrong choice!");

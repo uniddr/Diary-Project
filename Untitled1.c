@@ -3,23 +3,26 @@
 #include<time.h>
 #include<conio.h>
 #include<string.h>
+#include<dirent.h>
 
 void addnote();
 typedef struct entry
 {
     char date[12];
     char time[12];
-    char title[30];
+    char title[200];
     char body[1000];
 }entry;
 
 void addnote()
 {
     system("cls");
-    int ch1,ch2;
+    int ch1;
     entry e;
     FILE *fp;
-    char filetitle[255];
+    DIR *entdir;
+    struct dirent *subdirread;
+    char buffer1[25]={"./"},buffer2[25]={"./"},ch;
     printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t  \n");
     printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
     printf("\n\t\t\t\t     0   >>   To use system date and time\t\t\t\t\t\t  ");
@@ -34,25 +37,67 @@ void addnote()
 
         time(&timer);//retrieves the system date+time
         tm_info = localtime(&timer);//returns a convertible system date+time
-        strftime(rtime,sizeof(rtime), "%d/%m/%Y", tm_info);
+        strftime(rtime,sizeof(rtime), "%d-%m-%Y", tm_info);
         strcpy(e.date, rtime);
         strftime(rtime,sizeof(rtime), "%H:%M", tm_info);
         strcpy(e.time, rtime);
     }
     else if(ch1==1)
     {
-        printf("Enter date: ");
+        fflush(stdin);
+        printf("Enter date(dd-mm-yyyy): ");
         gets(e.date);
         fflush(stdin);
-        printf("\nEnter time: ");
-        gets(e.time);
-        fflush(stdin);
     }
-    printf("Enter note title: ");
-    gets(e.title);
-    fflush(stdin);
-    _getch();
-    //if((fp=fopen())
+    strcat(buffer1,e.date);
+    strcat(buffer1,"/");
+    if((entdir=opendir(buffer1))==NULL)
+    {
+        //gonna make a directory here.
+    }
+    else
+    {
+        printf("\nSuccessfully opened entry directory!\n");
+        if(ch1==1)
+        {
+            printf("Enter time(hh-mm): ");
+            gets(e.time);
+        }
+        strcat(buffer2,e.date);
+        strcat(buffer2,"/");
+        strcat(buffer2,e.time);
+        if((fp=fopen(buffer2,"rb+"))!=NULL)
+        {
+            printf("This entry already exists.Use Edit Entry from menu to edit the existing entry or delete the entry first!");
+            _getch();
+        }
+        else
+        {
+            if((fp=fopen(buffer2,"wb+"))==NULL)
+            {
+                printf("Unable to create entry!");
+                _getch();
+                return;
+            }
+            printf("Enter title: ");
+            fflush(stdin);
+            gets(e.title);
+            fputs(e.title,fp);
+            fputs("\n",fp);
+            printf("Enter the note: ");
+            fflush(stdin);
+            gets(e.body);
+            fputs(e.body,fp);
+            rewind(fp);
+            /*while((ch=fgetc(fp))!=EOF)
+            {
+                putc(ch,stdout);
+            }*/
+            fclose(fp);
+            closedir(entdir);
+            _getch();
+        }
+    }
 }
 
 

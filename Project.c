@@ -116,8 +116,15 @@ void viewnote()
      {
          printf("File does not exist.\n");
      }
-     printf("Success!!!File has been found.\n"); //*Needs to be updated*//
-     rewind(fp);
+     while(1)
+     {
+         char ch=fgetc(fp);
+         if(feof(fp))
+         {
+             break;
+         }
+         putchar(ch);
+     }
 
 }
 int main(int argc,char *argv[])

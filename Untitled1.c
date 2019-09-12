@@ -68,7 +68,7 @@ void addnote()
             gets(e.time);
         }
         entire_path=strcat(entire_dir,e.time);
-        fp=fopen(entire_path,"w");
+        fp=fopen(entire_path,"wb+");
         if(fp==NULL)
         {
             printf("Cannot open file.\n");
@@ -111,7 +111,7 @@ void viewnote()
      }
      printf("Enter file name : ");
      gets(filename);
-     fp=fopen(strcat(pathname,filename),"r");
+     fp=fopen(strcat(pathname,filename),"rb+");
      if(fp==NULL)
      {
          printf("File does not exist.\n");

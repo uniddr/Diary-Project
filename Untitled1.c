@@ -116,7 +116,7 @@ void viewnote()
      {
          printf("File does not exist.\n");
      }
-     printf("Success!!!File has been found.\n");
+     printf("Success!!!File has been found.\n"); //*Needs to be updated*//
      rewind(fp);
 
 }

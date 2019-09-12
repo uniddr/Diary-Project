@@ -6,6 +6,7 @@
 #include<process.h>
 #include<time.h>
 void addnote();
+void viewnote();
 typedef struct entry
 {
     char date[12];

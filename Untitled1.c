@@ -82,7 +82,7 @@ void addnote()
             fflush(stdin);
             gets(e.body);
             fputs(e.body,fp);
-            return;
+            rewind(fp);
 
 
 }
@@ -117,7 +117,7 @@ void viewnote()
          printf("File does not exist.\n");
      }
      printf("Success!!!File has been found.\n");
-
+     rewind(fp);
 
 }
 int main(int argc,char *argv[])

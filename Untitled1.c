@@ -49,7 +49,7 @@ void addnote()
         gets(e.date);
         fflush(stdin);
     }
-      printf("Please enter path name (Finish with %c): ",i);
+      printf("Please enter path name (Finish with %c): ",i);  //*Initial path is needed*//
       gets(pathname);
       entire_dir=strcat(pathname,e.date);
       value=mkdir(entire_dir);

@@ -189,9 +189,18 @@ void viewnote()
         printf("Cannot read file.\n");
     }
     else
-    {
-        printf("File has been found.\n");    *//Will be updated later//*
-    }
+        {
+            while(1)
+        {
+            char ch=fgetc(fp);
+            if(feof(fp))
+            {
+                break;
+            }
+            putchar(ch);
+        }
+        }
+        fclose(fp);
 
 }
 int main(int argc,char *argv[])
@@ -228,3 +237,4 @@ int main(int argc,char *argv[])
     }
     return 0;
 }
+

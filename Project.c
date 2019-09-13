@@ -190,7 +190,7 @@ void viewnote()
     }
     else
     {
-        printf("File has been found.\n");
+        printf("File has been found.\n");    *//Will be updated later//*
     }
 
 }

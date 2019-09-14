@@ -152,7 +152,7 @@ void viewnote()
     FILE *fp;
     struct dirent *dir;
     DIR *dp;
-    char pathname[50],dirname[50],*entire_path,*entire_dir,str[50];
+    char pathname[50],dirname[50],*entire_path,*entire_dir,str[50],*filename;
     printf("Enter a valid path name(Finish with %c) : ",i);
     fflush(stdin);
     gets(pathname);
@@ -165,7 +165,7 @@ void viewnote()
     {
         printf("Cannot open directory.\n");
     }
-    printf("Total files -> %d\n",fcount(entire_dir));
+    printf("Total %d files showing below >>> \n",fcount(entire_dir));
     while((dir=readdir(dp))!=NULL)
     {
             printf("%s\n",dir->d_name);
@@ -178,9 +178,11 @@ void viewnote()
     {
         if(strncmp(str,(dir->d_name),1)==0)
         {
-            entire_path=strcat(entire_dir,dir->d_name);
+            printf("%s\n",dir->d_name);
+            filename=dir->d_name;
         }
     }
+    entire_path=strcat(entire_dir,filename);
     fp=fopen(entire_path,"r+");
     if(fp==NULL)
     {
@@ -235,4 +237,3 @@ int main(int argc,char *argv[])
     }
     return 0;
 }
-

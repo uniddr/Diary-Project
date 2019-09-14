@@ -66,7 +66,7 @@ void addnote()
     }
     else if(ch1==1)
     {
-        printf("Enter a valid path name(Finish with %c) : ",i);
+        printf("Enter a valid path name(Finish with %c) : ",i); *//Some systems allow '\' *//
         fflush(stdin);
         gets(path_name);
         printf("Enter date(dd-mm-yyyy(Finish with %c)): ",i);

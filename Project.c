@@ -178,11 +178,10 @@ void viewnote()
     {
         if(strncmp(str,(dir->d_name),1)==0)
         {
-            printf("%s\n",dir->d_name);
-            filename=dir->d_name;
+           entire_path=strcat(entire_dir,dir->d_name);
+           filename=dir->d_name;
         }
     }
-    entire_path=strcat(entire_dir,filename);
     fp=fopen(entire_path,"r+");
     if(fp==NULL)
     {
@@ -190,6 +189,7 @@ void viewnote()
     }
     else
         {
+            printf("Elements of %s file showing below >>> \n\n",filename);
             while(1)
         {
             char ch=fgetc(fp);

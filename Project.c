@@ -7,7 +7,7 @@
 #include<time.h>
 void addnote();
 void viewnote();
-int fcount(char *dir_name)
+int fcount(char *dir_name)        *// Used to count total files in a directory *//
 {
      int filecount=-2;
      struct dirent *dir;
@@ -66,7 +66,7 @@ void addnote()
     }
     else if(ch1==1)
     {
-        printf("Enter a valid path name(Finish with %c) : ",i); *//Some systems allow '\' *//
+        printf("Enter a valid path name(Finish with %c) : ",i); *// '/' can be used also but some systems allow '\' *//
         fflush(stdin);
         gets(path_name);
         printf("Enter date(dd-mm-yyyy(Finish with %c)): ",i);
@@ -88,7 +88,7 @@ void addnote()
         printf("This directory is empty.\n");
         file_count=fcount(entire_dir);
         printf("Enter a name to create %d-th file [hh-mm] : ",file_count+1);
-        sprintf(s_num,"%d",file_count+1);
+        sprintf(s_num,"%d",file_count+1);     *// Changes int to string *//
         fflush(stdin);
         gets(e.time);
         entire_file=strcat(s_num,e.time);
@@ -107,7 +107,7 @@ void addnote()
             fflush(stdin);
             gets(e.body);
             fputs(e.body,fp);
-            rewind(fp);
+            fclose(fp);
 
     }
        else
@@ -182,7 +182,7 @@ void viewnote()
     dp=opendir(entire_dir);
     while((dir=readdir(dp))!=NULL)
     {
-        if(strncmp(str,(dir->d_name),1)==0)
+        if(strncmp(str,(dir->d_name),1)==0)       *// Comparing very first digit of the file names  Such as 1Project.txt *//
         {
            entire_path=strcat(entire_dir,dir->d_name);
            filename=dir->d_name;

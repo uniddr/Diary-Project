@@ -142,7 +142,7 @@ void addnote()
             fflush(stdin);
             gets(e.body);
             fputs(e.body,fp);
-            rewind(fp);
+            fclose(fp);
     }
 }
 }
@@ -164,20 +164,12 @@ void viewnote()
     if(dp==NULL)
     {
         printf("This directory does not exist.\n");
-        while(1)
-        {
-        printf("(PRESS 0) to return to Main Menu or (PRESS 1) to create a new directory\n");
-        printf("Please Select an option : \n");
+        printf("(PRESS 0) to return to Main Menu.\n");
         scanf("%d",&choice);
-        if(choice==1)
-        {
-            addnote();
-        }
-        else
+        if(choice==0)
         {
             return;
         }
-    }
     }
     printf("Total %d files showing below >>> \n",fcount(entire_dir));
     while((dir=readdir(dp))!=NULL)

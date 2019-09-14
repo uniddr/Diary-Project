@@ -148,7 +148,7 @@ void addnote()
 }
 void viewnote()
 {
-    int i=92,in,file_num;
+    int i=92,choice,in,file_num;
     FILE *fp;
     struct dirent *dir;
     DIR *dp;
@@ -163,7 +163,21 @@ void viewnote()
     dp=opendir(entire_dir);
     if(dp==NULL)
     {
-        printf("Cannot open directory.\n");
+        printf("This directory does not exist.\n");
+        while(1)
+        {
+        printf("(PRESS 0) to return to Main Menu or (PRESS 1) to create a new directory\n");
+        printf("Please Select an option : \n");
+        scanf("%d",&choice);
+        if(choice==1)
+        {
+            addnote();
+        }
+        else
+        {
+            return;
+        }
+    }
     }
     printf("Total %d files showing below >>> \n",fcount(entire_dir));
     while((dir=readdir(dp))!=NULL)

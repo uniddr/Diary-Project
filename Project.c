@@ -5,6 +5,51 @@
 #include<dir.h>
 #include<process.h>
 #include<time.h>
+int chk_dt(char *str)
+{
+        int k,count=0;
+        for(k=0;k<strlen(str)-1;k++)
+        {
+            switch(k)
+            {
+                case 0:
+                if('0'<=str[k]<='3'){count++;}
+                case 1:
+                if('0'<=str[k]<='1'){count++;}
+                case 2:
+                if(str[k]=='-'){count++;}
+                case 3:
+                if('0'<=str[k]<='1'){count++;}
+                case 4:
+                if('0'<=str[k]<='2'){count++;}
+                case 5:
+                if(str[k]=='-'){count++;}
+                case 6:
+                if('0'<=str[k]<='9'){count++;}
+                case 7:
+                if('0'<=str[k]<='9'){count++;}
+                case 8:
+                if('0'<=str[k]<='9'){count++;}
+                case 9:
+                if('0'<=str[k]<='9'){count++;}
+            }
+        }
+        if(count<10)
+        {
+            return 0;
+        }
+
+}
+int check(char *dir)
+{
+    DIR *dp;
+    dp=opendir(dir);
+    if(dp==NULL)
+    {
+        printf("Warning!!!Invalid path.\n");
+        return -1;
+    }
+}
 void open_dir(char *dir)
 {
     char *d;
@@ -99,10 +144,23 @@ void addnote()
         printf("Enter a valid path name (Finish with %c) \n: ",i);
         fflush(stdin);
         gets(pathname);
+        printf("Checking for path\n");
+        int k=check(pathname);
+        if(k==-1)
+        {
+            return;
+        }
         printf("Total folders in this directory %d : \n",fcount(pathname));
         printf("Enter a directory [dd-mm-yyyy] (Finish with %c) \n: ",i);
         fflush(stdin);
         gets(e.date);
+        printf("Checking for access.\n");
+        k=chk_dt(e.date);
+        if(k==0)
+        {
+            printf("Invalid entry.\n");
+            return;
+        }
         sprintf(str,"%d",fcount(pathname)+1);
         entire_dir=strcat(str,e.date);
         path=strcat(pathname,entire_dir);
@@ -130,6 +188,7 @@ void addnote()
             }
             else
             {
+                int count=0;
                 FILE *fp;
                 open_dir(pathname);
                 char filename[50],s[50],*file,*entire_file;
@@ -148,10 +207,17 @@ void addnote()
                 {
                     if(strncmp(str,(dir->d_name),1)==0)
                     {
+                        count++;
                         entire_dir=strcat(pathname,dir->d_name);
                         printf("Matched folder ->-> %s\n",entire_dir);
                     }
                 }
+                if(count==0)
+                {
+                    printf("This folder does not exist.\n");
+                    return;
+                }
+                else
                 printf("Enter %c to create file path : ",i);
                 scanf("%s",p);
                 entire_path=strcat(entire_dir,p);
@@ -188,13 +254,24 @@ void viewnote()
 {
         char pathname[50],dirname[50],*path,*entire_path,*entire_dir;
         char *file,str[50],p[10],q[50];
-        int i=92,ch,value,f_num;
+        int i=92,ch,value,f_num,count=0;
         FILE *fp;
         entry e;
         printf("Enter a valid path name (Finish with %c) \n: ",i);
         fflush(stdin);
         gets(pathname);
+        printf("Checking for path\n");
+        int k=check(pathname);
+        if(k==-1)
+        {
+            return;
+        }
         open_dir(pathname);
+        if(fcount(pathname)==0)
+        {
+            printf("Folder is empty.\n");
+            return;
+        }
         printf("Enter folder serial number to view : \n");
         scanf("%d",&f_num);
         sprintf(str,"%d",f_num);
@@ -212,14 +289,26 @@ void viewnote()
                 {
                     if(strncmp(str,(dir->d_name),1)==0)
                     {
+                        count++;
                         entire_dir=strcat(pathname,dir->d_name);
                         printf("Selected folder to view ->-> %s\n",entire_dir);
                     }
                 }
+                if(count==0)
+                {
+                    printf("This folder does not exist.\n");
+                    return;
+                }
+                else
                 printf("Enter %c to create file path : ",i);
                 scanf("%s",p);
                 entire_path=strcat(entire_dir,p);
                 open_dir(entire_path);
+                if(fcount(entire_path)==0)
+                {
+                    printf("Files not found.\n");
+                    return;
+                }
                 printf("Enter file serial number : \n");
                 scanf("%d",&value);
                 sprintf(q,"%d",value);

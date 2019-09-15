@@ -1,214 +1,261 @@
 #include<stdio.h>
-#include<stdlib.h>
 #include<string.h>
-#include<dir.h>
+#include<stdlib.h>
 #include<dirent.h>
+#include<dir.h>
 #include<process.h>
 #include<time.h>
-void addnote();
-void viewnote();
-int fcount(char *dir_name)        *// Used to count total files in a directory *//
+void open_dir(char *dir)
 {
-     int filecount=-2;
-     struct dirent *dir;
-     DIR *dp;
-     dp=opendir(dir_name);
-     if(dp==NULL)
-     {
-         printf("Cannot open directory.\n");
-     }
-     while((dir=readdir(dp))!=NULL)
-     {
-      if((dir->d_name)!=NULL)
-          {
-              filecount++;
-          }
-     }
-      return filecount;
-
+    char *d;
+    int k;
+    struct dirent *di;
+    DIR *dp;
+    dp=opendir(dir);
+    if(dp==NULL)
+    {
+        printf("Cannot open directory.\n");
+    }
+    printf("Showing all folders in %s : \n\n",dir);
+    while((di=readdir(dp))!=NULL)
+    {
+       d=di->d_name;
+       for(k=0;d[k];k++)
+       {
+           if(k==0)
+           {
+               printf("%c  ",d[k]);
+           }
+           else
+           {
+               printf("%c",d[k]);
+           }
+       }
+       printf("\n");
+    }
+}
+int fcount(char *dirname)
+{
+    int count=-2;
+    struct dirent *dir;
+    DIR *dp;
+    dp=opendir(dirname);
+    if(dp==NULL)
+    {
+        printf("Cannot open directory.\n");
+        return 0;
+    }
+    while((dir=readdir(dp))!=NULL)
+    {
+        if((dir->d_name)!=NULL)
+        {
+            count++;
+        }
+    }
+    return count;
 }
 typedef struct entry
 {
     char date[12];
     char time[12];
-    char title[100];
+    char title[200];
     char body[1000];
-}
-entry;
+}entry;
 void addnote()
 {
-    system("cls");
-    struct dirent *dir;
     entry e;
-    DIR *dp;
-    FILE *fp;
-    int value,in,i=92,ch1,file_count;
-    char dirname[50],*entire_dir,*entire_path,*entire_file,s_num[50];
-    char path_name[50],filename[50],str[50];
-    printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t  \n");
+    char pathname[50],dirname[50],*path,*entire_path,*entire_dir,str[50],p[10];
+    int i=92,ch,value,f_num;
+    printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t\t\n");
     printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
     printf("\n\t\t\t\t     0   >>   To use system date and time\t\t\t\t\t\t  ");
     printf("\n\t\t\t\t     1   >>   To use custom date and time\t\t\t\t\t\t  \n");
     printf("\n\t\t\t\t     Enter your choice:  ");
-    scanf("%d",&ch1);
-    if(ch1==0)
+    scanf("%d",&ch);
+    if(ch==0)
     {
         time_t timer;
         char rtime[12]="";
         struct tm* tm_info;
 
-        time(&timer);//retrieves the system date+time
-        tm_info = localtime(&timer);//returns a convertible system date+time
+        time(&timer);
+        tm_info = localtime(&timer);
         strftime(rtime,sizeof(rtime), "%d-%m-%Y", tm_info);
         strcpy(e.date, rtime);
-        strftime(rtime,sizeof(rtime), "%H:%M", tm_info);
+        strftime(rtime,sizeof(rtime), "%H-%M", tm_info);
         strcpy(e.time, rtime);
     }
-    else if(ch1==1)
+    else if(ch==1)
     {
-        printf("Enter a valid path name(Finish with %c) : ",i); *// '/' can be used also but some systems allow '\' *//
+        printf("\nPRESS 0 To return\nPRESS 1 To create directory\nPRESS 2 To create file.\n");
+        printf("Enter your choice : \n");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+        case 0:
+            return;
+        case 1:
+        printf("Enter a valid path name (Finish with %c) \n: ",i);
         fflush(stdin);
-        gets(path_name);
-        printf("Enter date(dd-mm-yyyy(Finish with %c)): ",i);
+        gets(pathname);
+        printf("Total folders in this directory %d : \n",fcount(pathname));
+        printf("Enter a directory [dd-mm-yyyy] (Finish with %c) \n: ",i);
         fflush(stdin);
         gets(e.date);
-        fflush(stdin);
-        entire_dir=strcat(path_name,e.date);
-        value=mkdir(entire_dir);
-    if(!value)
-    {
-        printf("Directory has been created.\n");
-    }
-    else
+        sprintf(str,"%d",fcount(pathname)+1);
+        entire_dir=strcat(str,e.date);
+        path=strcat(pathname,entire_dir);
+        value=mkdir(path);
+        if(value==0)
         {
-            printf("This directory already exists.\n");
+            printf("Sub folder has been created.\n");
         }
-    if(fcount(entire_dir)==0)
-    {
-        printf("This directory is empty.\n");
-        file_count=fcount(entire_dir);
-        printf("Enter a name to create %d-th file [hh-mm] : ",file_count+1);
-        sprintf(s_num,"%d",file_count+1);     *// Changes int to string *//
-        fflush(stdin);
-        gets(e.time);
-        entire_file=strcat(s_num,e.time);
-        entire_path=strcat(entire_dir,entire_file);
-        fp=fopen(entire_path,"w+");
-        if(fp==NULL)
+        else
         {
-            printf("Cannot open file.\n");
+            printf("This folder already exists.\n");
+            return;
         }
-            printf("Enter title: ");
+        break;
+        case 2:
+            printf("Enter a valid path name : \n");
             fflush(stdin);
-            gets(e.title);
-            fputs(e.title,fp);
-            fputs("\n",fp);
-            printf("Enter the note: ");
-            fflush(stdin);
-            gets(e.body);
-            fputs(e.body,fp);
-            fclose(fp);
+            gets(pathname);
+            f_num=fcount(pathname);
+            printf("Total folders >>> %d\n",f_num);
+            if(f_num==0)
+            {
+                printf("Cannot create file.\n");
+                return;
+            }
+            else
+            {
+                FILE *fp;
+                open_dir(pathname);
+                char filename[50],s[50],*file;
+                struct dirent *dir;
+                DIR *dp;
+                dp=opendir(pathname);
+                if(dp==NULL)
+                {
+                    printf("Cannot open directory.\n");
+                    return;
+                }
+                printf("Enter folder serial number : ");
+                scanf("%d",&value);
+                sprintf(str,"%d",value);
+                while((dir=readdir(dp))!=NULL)
+                {
+                    if(strncmp(str,(dir->d_name),1)==0)
+                    {
+                        entire_dir=strcat(pathname,dir->d_name);
+                        printf("Matched folder ->-> %s\n",entire_dir);
+                    }
+                }
+                printf("Enter %c to create file path : ",i);
+                scanf("%s",p);
+                entire_path=strcat(entire_dir,p);
+                sprintf(s,"%d",fcount(entire_dir)+1);
+                printf("Enter a file name [hh-mm] to write in %s : \n",entire_path);
+                fflush(stdin);
+                gets(filename);
+                file=strcat(entire_path,strcat(s,filename));
+                fp=fopen(file,"w+");
+                if(fp==NULL)
+                {
+                    return;
+                }
+                else
+                    {
+                        printf("Enter title : ");
+                        fflush(stdin);
+                        gets(e.title);
+                        fprintf(fp,"%s",e.title);
+                        printf("Enter note : ");
+                        fflush(stdin);
+                        gets(e.body);
+                        fprintf(fp,"%s",e.body);
+                    }
+                    fclose(fp);
+                    return;
 
-    }
-       else
-    {
-        dp=opendir(entire_dir);
-        if(dp==NULL)
-        {
-            printf("Cannot open directory.\n");
-        }
-        while((dir=readdir(dp))!=NULL)
-        {
-            printf("%s\n",dir->d_name);
-        }
-        file_count=fcount(entire_dir);
-        printf("Enter a name to create %d-th file [hh-mm]: ",file_count+1);
-        sprintf(s_num,"%d",file_count+1);
-        fflush(stdin);
-        gets(e.time);
-        entire_file=strcat(s_num,e.time);
-        entire_path=strcat(entire_dir,entire_file);
-        fp=fopen(entire_path,"w+");
-        if(fp==NULL)
-        {
-            printf("Cannot open file.\n");
-        }
-            printf("Enter title: ");
-            fflush(stdin);
-            gets(e.title);
-            fputs(e.title,fp);
-            fputs("\n",fp);
-            printf("Enter the note: ");
-            fflush(stdin);
-            gets(e.body);
-            fputs(e.body,fp);
-            fclose(fp);
+            }
     }
 }
 }
 void viewnote()
 {
-    int i=92,choice,in,file_num;
-    FILE *fp;
-    struct dirent *dir;
-    DIR *dp;
-    char pathname[50],dirname[50],*entire_path,*entire_dir,str[50],*filename;
-    printf("Enter a valid path name(Finish with %c) : ",i);
-    fflush(stdin);
-    gets(pathname);
-    printf("Enter date(dd-mm-yyyy(Finish with %c)): ",i);
-    fflush(stdin);
-    gets(dirname);
-    entire_dir=strcat(pathname,dirname);
-    dp=opendir(entire_dir);
-    if(dp==NULL)
-    {
-        printf("This directory does not exist.\n");
-        printf("(PRESS 0) to return to Main Menu.\n");
-        scanf("%d",&choice);
-        if(choice==0)
+        char pathname[50],dirname[50],*path,*entire_path,*entire_dir;
+        char *file,str[50],p[10],q[50];
+        int i=92,ch,value,f_num;
+        FILE *fp;
+        entry e;
+        printf("Enter a valid path name (Finish with %c) \n: ",i);
+        fflush(stdin);
+        gets(pathname);
+        open_dir(pathname);
+        printf("Enter folder serial number to view : \n");
+        scanf("%d",&f_num);
+        sprintf(str,"%d",f_num);
+        struct dirent *dir;
+        DIR *dp;
+        dp=opendir(pathname);
+        if(dp==NULL)
         {
+            printf("Cannot open directory.\n");
             return;
         }
-    }
-    printf("Total %d files showing below >>> \n",fcount(entire_dir));
-    while((dir=readdir(dp))!=NULL)
-    {
-            printf("%s\n",dir->d_name);
-    }
-    printf("Enter file serial number [Please enter the first digit from left] : ");
-    scanf("%d",&file_num);
-    sprintf(str,"%d",file_num);
-    dp=opendir(entire_dir);
-    while((dir=readdir(dp))!=NULL)
-    {
-        if(strncmp(str,(dir->d_name),1)==0)       *// Comparing very first digit of the file names  Such as 1Project.txt *//
+        else
         {
-           entire_path=strcat(entire_dir,dir->d_name);
-           filename=dir->d_name;
+             while((dir=readdir(dp))!=NULL)
+                {
+                    if(strncmp(str,(dir->d_name),1)==0)
+                    {
+                        entire_dir=strcat(pathname,dir->d_name);
+                        printf("Selected folder to view ->-> %s\n",entire_dir);
+                    }
+                }
+                printf("Enter %c to create file path : ",i);
+                scanf("%s",p);
+                entire_path=strcat(entire_dir,p);
+                open_dir(entire_path);
+                printf("Enter file serial number : \n");
+                scanf("%d",&value);
+                sprintf(q,"%d",value);
+                dp=opendir(entire_path);
+                if(dp==NULL)
+                {
+                    printf("Cannot open folder.\n");
+                    return;
+                }
+                while((dir=readdir(dp))!=NULL)
+                {
+                    if(strncmp(q,(dir->d_name),1)==0)
+                    {
+                        file=strcat(entire_path,dir->d_name);
+                        printf("Selected file to view ->-> %s\n",file);
+                    }
+                }
+                fp=fopen(file,"r+");
+                if(fp==NULL)
+                {
+                    printf("Cannot open file.\n");
+                    return;
+                }
+                printf("Showing file elements.\n\n");
+                while(1)
+                {
+                    char ch=fgetc(fp);
+                    if(feof(fp))
+                    {
+                        break;
+                    }
+                    putchar(ch);
+                }
+                fclose(fp);
         }
-    }
-    fp=fopen(entire_path,"r+");
-    if(fp==NULL)
-    {
-        printf("Cannot read file.\n");
-    }
-    else
-        {
-            printf("Elements of %s file showing below >>> \n\n",filename);
-            while(1)
-        {
-            char ch=fgetc(fp);
-            if(feof(fp))
-            {
-                break;
-            }
-            putchar(ch);
-        }
-        }
-        fclose(fp);
 
 }
+
 int main(int argc,char *argv[])
 {
     int t,j,c;
@@ -235,7 +282,6 @@ int main(int argc,char *argv[])
         case 2:
             viewnote();
             break;
-
         default:
             printf("\nWrong choice!");
             break;

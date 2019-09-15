@@ -155,7 +155,7 @@ void addnote()
                 scanf("%s",p);
                 entire_path=strcat(entire_dir,p);
                 sprintf(s,"%d",fcount(entire_dir)+1);
-                printf("Enter a file name [hh-mm] to write in %s : \n",entire_path);
+                printf("Enter a file name [hh-mm]  : \n");
                 fflush(stdin);
                 gets(filename);
                 file=strcat(entire_path,strcat(s,filename));

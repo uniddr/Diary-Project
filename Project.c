@@ -131,7 +131,7 @@ void addnote()
             {
                 FILE *fp;
                 open_dir(pathname);
-                char filename[50],s[50],*file;
+                char filename[50],s[50],*file,*entire_file;
                 struct dirent *dir;
                 DIR *dp;
                 dp=opendir(pathname);
@@ -154,11 +154,12 @@ void addnote()
                 printf("Enter %c to create file path : ",i);
                 scanf("%s",p);
                 entire_path=strcat(entire_dir,p);
-                sprintf(s,"%d",fcount(entire_dir)+1);
-                printf("Enter a file name [hh-mm]  : \n");
+                sprintf(s,"%d",fcount(entire_path)+1);
+                printf("Enter a file name [hh-mm] : \n");
                 fflush(stdin);
                 gets(filename);
-                file=strcat(entire_path,strcat(s,filename));
+                entire_file=strcat(s,filename);
+                file=strcat(entire_path,entire_file);
                 fp=fopen(file,"w+");
                 if(fp==NULL)
                 {

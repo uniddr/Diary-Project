@@ -17,6 +17,7 @@ void open_dir(char *dir)
         printf("Cannot open directory.\n");
     }
     printf("Showing all folders in %s : \n\n",dir);
+    printf("Serial Number:  Folder Name: \n");
     while((di=readdir(dp))!=NULL)
     {
        d=di->d_name;
@@ -239,7 +240,7 @@ void viewnote()
                 fp=fopen(file,"r+");
                 if(fp==NULL)
                 {
-                    printf("Cannot open file.\n");
+                    printf("File cannot be found.\n");
                     return;
                 }
                 printf("Showing file elements.\n\n");

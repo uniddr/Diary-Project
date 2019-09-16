@@ -138,6 +138,7 @@ void addnote()
                     printf("Cannot open file.\n");
                     return;
                 }
+                printf("Success!!!File has been created.\n");
                 printf("Enter title : ");
                 fflush(stdin);
                 gets(e.title);
@@ -176,6 +177,11 @@ void viewnote()
                     f++;
                     printf("%d   %s\n",f+1,dir->d_name);
                 }
+                if(f==-1)
+                {
+                    printf("No folder found.\n");
+                    return;
+                }
                 printf("Enter folder serial to view file : \n");
                 scanf("%d",&input);
                 dp=opendir(pathname);
@@ -203,6 +209,11 @@ void viewnote()
                 {
                     count++;
                     printf("%d   %s\n",count+1,dir->d_name);
+                }
+                if(count==-1)
+                {
+                    printf("No file found.\n");
+                    return;
                 }
                 printf("Enter file serial to view file : \n");
                 scanf("%d",&input);

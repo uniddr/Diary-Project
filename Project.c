@@ -1,3 +1,4 @@
+#define MAX_SIZE 1000
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
@@ -158,7 +159,7 @@ void addnote()
 void viewnote()
 {
      int i=92,input,k=-2,value,count=-3,f=-3;
-     char pathname[50],*path,s[10],*entire_dir,*filename;
+     char pathname[50],*di[100],s[10],*entire_dir,*file[100],*path,*filename;
      printf("Enter a valid pathname(Finish with %c) : ",i);
      fflush(stdin);
      gets(pathname);
@@ -175,7 +176,12 @@ void viewnote()
      while((dir=readdir(dp))!=NULL)
                 {
                     f++;
-                    printf("%d   %s\n",f+1,dir->d_name);
+                    if(f>-1)
+                    {
+                        di[f]=(char*)malloc(MAX_SIZE);
+                        strcpy(di[f],dir->d_name);
+                        printf("%d   %s\n",f+1,di[f]);
+                    }
                 }
                 if(f==-1)
                 {
@@ -184,17 +190,9 @@ void viewnote()
                 }
                 printf("Enter folder serial to view file : \n");
                 scanf("%d",&input);
-                dp=opendir(pathname);
-                while((dir=readdir(dp))!=NULL)
-                {
-                    k++;
-                    if(k==input)
-                    {
-                        path=strcat(pathname,dir->d_name);
-                        break;
-                    }
-                }
-                printf("Enter %c to view files in %s : ",i,path);
+                printf("Selected folder to view is %s : \n",di[input-1]);
+                path=strcat(pathname,di[input-1]);
+                printf("\nEnter %c to view files in %s : ",i,path);
                 fflush(stdin);
                 gets(s);
                 entire_dir=strcat(path,s);
@@ -208,7 +206,12 @@ void viewnote()
                 while((dir=readdir(dp))!=NULL)
                 {
                     count++;
-                    printf("%d   %s\n",count+1,dir->d_name);
+                    if(count>-1)
+                    {
+                        file[count]=(char*)malloc(MAX_SIZE);
+                        strcpy(file[count],dir->d_name);
+                        printf("%d   %s\n",count+1,file[count]);
+                    }
                 }
                 if(count==-1)
                 {
@@ -217,17 +220,8 @@ void viewnote()
                 }
                 printf("Enter file serial to view file : \n");
                 scanf("%d",&input);
-                dp=opendir(entire_dir);
-                k=-2;
-                while((dir=readdir(dp))!=NULL)
-                {
-                    k++;
-                    if(k==input)
-                    {
-                        filename=strcat(entire_dir,dir->d_name);
-                        break;
-                    }
-                }
+                printf("Selected file to view is %s : \n",file[input-1]);
+                filename=strcat(entire_dir,file[input-1]);
                 FILE *fp;
                 fp=fopen(filename,"r+");
                 if(fp==NULL)
@@ -263,7 +257,7 @@ int main(int argc,char *argv[])
         printf("\n\t\t\t\t    --------------------------------------------\t\t\t\t  ");
         printf("\n\t\t\t\t\t\t     Main Menu\t\t\t\t\t  \n");
         printf("\n\t\t\t\t     0   >>   Exit Program\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     1   >>   Add Record\t\t\t\t\t\t  \n");
+        printf("\n\t\t\t\t     1   >>   Add Record\t\t\t\t\t\t\t  ");
         printf("\n\t\t\t\t     2   >>   View Record\t\t\t\t\t\t  \n");
         printf("\n\t\t\t\t     Enter your choice:  ");
         scanf("%d",&c);

@@ -179,6 +179,11 @@ void viewnote()
                     if(f>-1)
                     {
                         di[f]=(char*)malloc(MAX_SIZE);
+                        if(di[f]==NULL)
+                        {
+                            printf("Not enough spaces for storing folders.\n");
+                            return;
+                        }
                         strcpy(di[f],dir->d_name);
                         printf("%d   %s\n",f+1,di[f]);
                     }
@@ -209,6 +214,11 @@ void viewnote()
                     if(count>-1)
                     {
                         file[count]=(char*)malloc(MAX_SIZE);
+                        if(file[count]==NULL)
+                        {
+                            printf("Not enough spaces for storing files.\n");
+                            return;
+                        }
                         strcpy(file[count],dir->d_name);
                         printf("%d   %s\n",count+1,file[count]);
                     }

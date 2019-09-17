@@ -17,7 +17,7 @@ void addnote()
 {
     int i=92,c,ch,k=-2,key,value,count=-2,f=-3;
     entry e;
-    char pathname[50],*path,s[10],*entire_dir,*filename;
+    char pathname[50],*path,s[10],*entire_dir,*filename,*file,*di[100];
     printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t  \n");
     printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
     printf("\n\t\t\t\t     0   >>   To use system date and time\t\t\t\t\t\t  ");
@@ -104,36 +104,62 @@ void addnote()
             }
             else
             {
+                printf("\nPRESS 1 To create file in existing directories\nPRESS 2 To create a new directory.\n");
+                printf("Enter your choice : ");
+                scanf("%d",&c);
+                switch(c)
+                {
+            case 1:
                 dp=opendir(pathname);
                 printf("\nShowing folders in %s : \n",pathname);
                 printf("Serial number:   Folder name:   \n");
                 while((dir=readdir(dp))!=NULL)
                 {
                     f++;
-                    printf("%d   %s\n",f+1,dir->d_name);
+                    if(f>-1)
+                    {
+                        di[f]=(char*)malloc(MAX_SIZE);
+                        if(di[f]==NULL)
+                        {
+                            printf("Not enough spaces for storing folders.\n");
+                            return;
+                        }
+                        strcpy(di[f],dir->d_name);
+                        printf("%d   %s\n",f+1,di[f]);
+                    }
                 }
                 printf("Enter serial number to create file : ");
                 scanf("%d",&value);
-                dp=opendir(pathname);
-                while((dir=readdir(dp))!=NULL)
-                {
-                    k++;
-                    if(k==value)
-                    {
-                        entire_dir=strcat(pathname,dir->d_name);
-                        break;
-                    }
-                }
-                printf("\nEnter %c to create file in %s : ",i,entire_dir);
+                printf("Selected folder to create file is %s : \n",di[value-1]);
+                printf("\nEnter %c to create file : ",i);
                 fflush(stdin);
                 gets(s);
-                filename=strcat(entire_dir,s);
+                entire_dir=strcat(di[value-1],s);
+                file=strcat(pathname,entire_dir);
+                break;
+            case 2:
+                printf("Enter date[dd-mm-yyyy](Finish with %c) : \n",i);
+                fflush(stdin);
+                gets(e.date);
+                file=strcat(pathname,e.date);
+                value=mkdir(file);
+                if(value==0)
+                {
+                    printf("Directory has been created.\n");
+                }
+                else
+                    {
+                        printf("This directory already exists.\n");
+                        return;
+                    }
+                    break;
+                }
                 printf("Enter a file name [hh-mm] : ");
                 fflush(stdin);
                 gets(e.time);
-                char *entire_file=strcat(filename,e.time);
+                filename=strcat(file,e.time);
                 FILE *fp;
-                fp=fopen(entire_file,"w+");
+                fp=fopen(filename,"w+");
                 if(fp==NULL)
                 {
                     printf("Cannot open file.\n");
@@ -154,7 +180,6 @@ void addnote()
 
     }
     }
-
 }
 void viewnote()
 {

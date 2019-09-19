@@ -111,7 +111,6 @@ void addnote()
                 {
             case 1:
                 dp=opendir(pathname);
-                printf("\nShowing folders in %s : \n",pathname);
                 printf("Serial number:   Folder name:   \n");
                 while((dir=readdir(dp))!=NULL)
                 {
@@ -130,7 +129,6 @@ void addnote()
                 }
                 printf("Enter serial number to create file : ");
                 scanf("%d",&value);
-                printf("Selected folder to create file is %s : \n",di[value-1]);
                 printf("\nEnter %c to create file : ",i);
                 fflush(stdin);
                 gets(s);
@@ -196,7 +194,6 @@ void viewnote()
          printf("Cannot open directory to view.\n");
          return;
      }
-     printf("Showing folders in %s \n\n",pathname);
      printf("Serial number:   Folder name:   \n");
      while((dir=readdir(dp))!=NULL)
                 {
@@ -220,9 +217,8 @@ void viewnote()
                 }
                 printf("Enter folder serial to view file : \n");
                 scanf("%d",&input);
-                printf("Selected folder to view is %s : \n",di[input-1]);
                 path=strcat(pathname,di[input-1]);
-                printf("\nEnter %c to view files in %s : ",i,path);
+                printf("\nEnter %c to view files : ",i);
                 fflush(stdin);
                 gets(s);
                 entire_dir=strcat(path,s);
@@ -255,7 +251,6 @@ void viewnote()
                 }
                 printf("Enter file serial to view file : \n");
                 scanf("%d",&input);
-                printf("\nSelected file to view is %s : \n",file[input-1]);
                 filename=strcat(entire_dir,file[input-1]);
                 FILE *fp;
                 fp=fopen(filename,"r+");
@@ -264,7 +259,7 @@ void viewnote()
                     printf("Cannot read file.\n");
                     return;
                 }
-                printf("\nFile has been found.\nShowing file elements : \n\n");
+                printf("\n\nShowing file elements : \n\n");
                 {
                     while(1)
                     {

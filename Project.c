@@ -255,7 +255,7 @@ void viewnote()
                 }
                 printf("Enter file serial to view file : \n");
                 scanf("%d",&input);
-                printf("Selected file to view is %s : \n",file[input-1]);
+                printf("\nSelected file to view is %s : \n",file[input-1]);
                 filename=strcat(entire_dir,file[input-1]);
                 FILE *fp;
                 fp=fopen(filename,"r+");
@@ -264,7 +264,7 @@ void viewnote()
                     printf("Cannot read file.\n");
                     return;
                 }
-                printf("Showing file elements : \n");
+                printf("\nFile has been found.\nShowing file elements : \n\n");
                 {
                     while(1)
                     {

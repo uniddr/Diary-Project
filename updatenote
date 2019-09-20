@@ -1,0 +1,91 @@
+void updatenote()
+{
+    int i=92,input,k=-2,value,count=-3,f=-3;
+    char pathname[50],*di[100],s[10],*entire_dir,*file[100],*path,*filename;
+    printf("Enter a valid pathname(Finish with %c):",i);
+    fflush(stdin);
+    gets(pathname);
+    struct dirent *dir;
+    DIR *dp;
+    dp = opendir(pathname);
+    if(dp==NULL)
+    {
+        printf("Can not open directory.\n");
+        return;
+    }
+    printf("Serial number:  Folder number:  \n");
+    while((dir=readdir(dp))!=NULL)
+    {
+        f++;
+        if(f>-1)
+        {
+            di[f]=(char*)malloc(MAX_SIZE);
+            if(di[f]==NULL)
+            {
+                printf("Not enough space for storing folders\n");
+                return;
+            }
+            strcpy(di[f],dir->d_name);
+            printf("%d  %s\n",f+1,di[f]);
+        }
+    }
+    if(f==-1)
+    {
+        printf("No Folder Found\n");
+        return;
+    }
+    printf("Enter folder serial to view and edit the file:\n");
+    scanf("%d",&input);
+    path = strcat(pathname,di[input-1]);
+    printf("\nEnter %c to view files:",i);
+    fflush(stdin);
+    gets(s);
+    entire_dir=strcat(path,s);
+    dp = opendir(entire_dir);
+    if(dp==NULL)
+    {
+        printf("Cannot open folder\n");
+        return;
+    }
+    printf("Serial Number:  Folder Name:  \n");
+    while((dir=readdir(dp))!=NULL)
+
+    {
+        count++;
+        if(count>-1)
+        {
+            file[count] = (char*)malloc(MAX_SIZE);
+            if(file[count]==NULL)
+            {
+                printf("Error\n");
+                return;
+            }
+            strcpy(file[count],dir->d_name);
+            printf("%d  %s\n",count+1,file[count]);
+        }
+    }
+
+    if(count==-1)
+    {
+        printf("No file found.\n");
+        return;
+    }
+    printf("Enter file serial to edit file:\n");
+    scanf("%d",&input);
+    filename=strcat(entire_dir,file[input-1]);
+    FILE *fp;
+    fp = fopen(filename,"rb+");
+    if(fp==NULL)
+    {
+        printf("Can not open the file to edit\n");
+        return;
+    }
+    printf("Enter the new title:");
+    fflush(stdin);
+    gets(e.title);
+    printf("Enter note :\n");
+    fflush(stdin);
+    gets(e.body);
+    fclose(fp);
+
+}

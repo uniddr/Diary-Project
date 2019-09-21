@@ -5,6 +5,7 @@
 #include<string.h>
 #include<dirent.h>
 #include<sys/stat.h>
+#include<errno.h>
 
 void addnote();
 void editnote();
@@ -24,7 +25,7 @@ void addnote()
     FILE *fp;
     DIR *entdir;
     struct dirent *subdirread;
-    char buffer1[25]={"./"},buffer2[25]={"./"};
+    char dirname[25]={"./Notes/"},filename[25]={"./Notes/"};
     printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t  \n");
     printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
     printf("\n\t\t\t\t     0   >>   To use system date and time\t\t\t\t\t\t  ");
@@ -51,14 +52,23 @@ void addnote()
         gets(e.date);
         fflush(stdin);
     }
-    strcat(buffer1,e.date);
-    strcat(buffer1,"/");
-    if((entdir=opendir(buffer1))==NULL)
+    if((entdir=opendir(dirname))==NULL)
     {
-        if(!(mkdir(buffer1)))
+        if((mkdir(dirname))==-1)
+        {
+            printf("Error handling path! ");
+            return;
+        }
+    }
+    closedir(entdir);
+    strcat(dirname,e.date);
+    strcat(dirname,"/");
+    if((entdir=opendir(dirname))==NULL)
+    {
+        if(!(mkdir(dirname)))
         {
             printf("Directory successfully created!");
-            entdir=opendir(buffer1);
+            entdir=opendir(dirname);
         }
         else
         {
@@ -71,17 +81,17 @@ void addnote()
         printf("Enter time(hh-mm): ");
         gets(e.time);
     }
-    strcat(buffer2,e.date);
-    strcat(buffer2,"/");
-    strcat(buffer2,e.time);
-    if((fp=fopen(buffer2,"rb+"))!=NULL)
+    strcat(filename,e.date);
+    strcat(filename,"/");
+    strcat(filename,e.time);
+    if((fp=fopen(filename,"rb+"))!=NULL)
     {
         printf("This entry already exists.Use Edit Option from menu to edit the existing entry or delete the entry first!\n\nPress any key to go back to main menu");
         _getch();
     }
     else
     {
-        if((fp=fopen(buffer2,"wb+"))==NULL)
+        if((fp=fopen(filename,"wb+"))==NULL)
         {
             printf("Unable to create entry!");
             _getch();
@@ -107,6 +117,146 @@ void addnote()
         _getch();
     }
 }
+void viewnote()
+{
+    system("cls");
+    int f=0,ch;
+    long int choice;
+    char pathname[50]={"./Notes/"},name[500][15],choice_check[20],*choice_remain;
+    struct dirent *dir;
+    DIR *dp;
+    printf("\n\t\t\t\t\t\t     VIEW MENU\t\t\t\t\t  \n");
+    printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
+    if((dp=opendir(pathname))==NULL)
+    {
+        printf("\n\n\n\nCannot open directory to view.Press any key to go back to main menu.\n");
+        fflush(stdin);
+        _getch();
+        return;
+    }
+    printf("\n\t\t\t\t     SN:   Name:\t\t\t\t\t\t  \n");
+    while((dir=readdir(dp))!=NULL)
+    {
+        if((strcmp(dir->d_name,"..")!=0)&&(strcmp(dir->d_name,".")!=0))
+        {
+            strcpy(name[f],dir->d_name);
+            printf("\n\t\t\t\t     %d.   %s",f+1,name[f]);
+            f++;
+        }
+    }
+    if(f==0)
+    {
+        printf("No folder found.\n");
+        return;
+    }
+    closedir(dp);
+    while(1)
+    {
+        fflush(stdin);
+        printf("\n\n\t\t\t\t     Enter serial no. of date to view : ");
+        fgets(choice_check,20,stdin);
+        errno=0;
+        choice=strtol(choice_check,&choice_remain,10);
+        if((errno==ERANGE)||(choice==0 && errno!=0)||(choice_remain==choice_check)||(*choice_remain!='\n'))
+        {
+            perror("Error");
+            printf("Press any key to go back to main menu.\n");
+            fflush(stdin);
+            _getch();
+            return;
+        }
+        if((choice<=f)&&(choice>=1))
+        {
+            break;
+        }
+        else
+        {
+            fflush(stdin);
+            printf("\n\t\t\t\t     Wrong choice! ");
+            printf("Press any key to choose again.");
+            _getch();
+        }
+    }
+    strcat(pathname,name[choice-1]);
+    strcat(pathname,"/");
+    dp=opendir(pathname);
+    if(dp==NULL)
+    {
+        printf("\n\t\t\t\t     Cannot open folder.\n");
+        return;
+    }
+    system("cls");
+    f=0;
+    printf("\n\t\t\t\t     SN:  Name:   \n");
+    while((dir=readdir(dp))!=NULL)
+    {
+        if((strcmp(dir->d_name,"..")!=0)&&(strcmp(dir->d_name,".")!=0))
+        {
+            strcpy(name[f],dir->d_name);
+            printf("\n\t\t\t\t     %d.   %s",f+1,name[f]);
+            f++;
+        }
+    }
+    if(f==0)
+    {
+        printf("\n\t\t\t\t     No file found.\n");
+        return;
+    }
+    closedir(dp);
+    while(1)
+    {
+        fflush(stdin);
+        printf("\n\n\t\t\t\t     Enter serial no. of time to view : ");
+        fgets(choice_check,20,stdin);
+        errno=0;
+        choice=strtol(choice_check,&choice_remain,10);
+        if((errno==ERANGE)||(choice==0 && errno!=0)||(choice_remain==choice_check)||(*choice_remain!='\n'))
+        {
+            perror("Error");
+            printf("Press any key to go back to main menu.\n");
+            fflush(stdin);
+            _getch();
+            return;
+        }
+        if((choice<=f)&&(choice>=1))
+        {
+            break;
+        }
+        else
+        {
+            fflush(stdin);
+            printf("\n\t\t\t\t     Wrong choice! ");
+            printf("Press any key to choose again.");
+            _getch();
+        }
+    }
+    strcat(pathname,name[choice-1]);
+    FILE *fp;
+    if((fp=fopen(pathname,"rb+"))==NULL)
+    {
+        printf("\n\n\t\t\t\t     Cannot read file.\n");
+        return;
+    }
+    system("cls");
+    printf("\n\n\t\t\t\t     Showing file elements : \n\n");
+    {
+        while(1)
+        {
+            if((ch=fgetc(fp))!=EOF)
+            {
+                putc(ch,stdout);
+            }
+            else
+            {
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    fflush(stdin);
+    printf("\n\nPress any key to go back to main menu ");
+    _getch();
+}
 
 
 int main(int argc,char *argv[])
@@ -119,24 +269,31 @@ int main(int argc,char *argv[])
         printf("\n\t\t\t\t    --------------------------------------------\t\t\t\t  ");
         printf("\n\t\t\t\t\t\t     Main Menu\t\t\t\t\t  \n");
         printf("\n\t\t\t\t     0   >>   Exit Program\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     1   >>   Add Record\t\t\t\t\t\t  \n");
+        printf("\n\t\t\t\t     1   >>   Add Record\t\t\t\t\t\t  ");
+        printf("\n\t\t\t\t     2   >>   View Record\t\t\t\t\t\t  \n");
         printf("\n\t\t\t\t     Enter your choice:  ");
         scanf("%d",&c);
 
         switch(c)
         {
         case 0:
+            system("cls");
+            printf("\n\n\t\t\t\t\t  Thank you for using the software! \n\n\n\n");
             exit(1);
 
         case 1:
             addnote();
             break;
-        /*case 2:
-            editnote();
+
+        case 2:
+            viewnote();
             break;
-        */
+
         default:
-            printf("\nWrong choice!");
+            printf("\n\t\t\t\t     Wrong choice! ");
+            printf("Press any key to choose again.");
+            _getch();
+            fflush(stdin);
             break;
         }
         system("cls");

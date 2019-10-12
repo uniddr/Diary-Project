@@ -1,0 +1,39 @@
+PDCurses Documentation
+======================
+
+The main documentation for PDCurses is here:
+
+- [User's Guide] - Basic overview
+- [Implementor's Guide] - What you need to know to port PDCurses
+- [Manual] - Each function, etc.
+- [History]
+
+Also consult the README for each specific platform you'll be using:
+
+- [DOS]
+- [OS/2]
+- [SDL 1.x]
+- [SDL 2.x]
+- [Windows]
+- [X11]
+
+This directory also contains the files, CNAME and index.html, that
+create pdcurses.org, via GitHub.
+
+
+Building
+--------
+
+- To rebuild MANUAL.md from the "man page" sections of the source code,
+  type "./mkman.sh". Needs a Unix-like shell and a Python interpreter.
+
+
+Distribution Status
+-------------------
+
+The files in this directory are released to the public domain.
+
+[User's Guide]: USERS.md
+[Implementor's Guide]: IMPLEMNT.md
+[Manual]: MANUAL.md
+[History]: HISTORY.md

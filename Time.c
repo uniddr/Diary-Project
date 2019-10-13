@@ -39,48 +39,49 @@ char *strdiv(char *str,int start,int end)
     return p;
 
 }
-int check_dt(char *str)
+int check_dt(char *date)
 {
-   int v1,v2,v3,i,count=0;
+   int day,month,year,i,count=0;
    char *p1,*p2,*p3;
-   p1=strdiv(str,0,1);
-   p2=strdiv(str,3,4);
-   p3=strdiv(str,6,9);
-   v1=atoi(p1);
-   v2=atoi(p2);
-   v3=atoi(p3);
-   if(v1==0||v2==0||v3==0)
+   p1=strdiv(date,0,1);
+   p2=strdiv(date,3,4);
+   p3=strdiv(date,6,strlen(date-1));
+   day=atoi(p1);
+   month=atoi(p2);
+   year=atoi(p3);
+   printf("%d %d %d\n",day,month,year);
+   if(day==0||month==0||year==0)
    {
        return 0;
    }
-   else if(v1>31||v2>12||v3>3000)
+   else if(day>31||month>12||year>=3000)
    {
        return 0;
    }
-   i=leapyear(v3);
-   if(v2==1||v2==3||v2==5||v2==7||v2==8||v2==10||v2==12)
+   i=leapyear(year);
+   if(month==1||month==3||month==5||month==7||month==8||month==10||month==12)
        {
-           if(1<=v1<=31)
+           if(1<=day<=31)
            {
                  count++;
                  return count;
            }
            return 0;
        }
-       else if(v2==4||v2==6||v2==9||v2==1)
+       else if(month==4||month==6||month==9||month==1)
        {
-           if(1<=v1<=30)
+           if(1<=day<=30)
            {
                count++;
                return count;
            }
            return 0;
        }
-       else if(v2==2)
+       else if(month==2)
        {
            if(i==0)
        {
-           if(1<=v1<=28)
+           if(1<=day<=28)
            {
                count++;
                return count;
@@ -89,7 +90,7 @@ int check_dt(char *str)
        }
        else if(i==1)
        {
-           if(1<=v1<=29)
+           if(1<=day<=29)
            {
                count++;
                return count;
@@ -97,6 +98,27 @@ int check_dt(char *str)
            return 0;
        }
        }
+}
+int check_tm(char *time)
+{
+    int hour,minute;
+    char *p1,*p2;
+    p1=strdiv(time,0,1);
+    p2=strdiv(time,3,4);
+    hour=atoi(p1);
+    minute=atoi(p2);
+    if(hour==0||minute==0)
+    {
+        return 0;
+    }
+    if(1<=hour<=12&&0<=minute<=60)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 int main()
 {
@@ -112,7 +134,19 @@ int main()
     }
     else
     {
-        printf("Success!!!");
+        printf("Date has been entered successfully!!!\n");
+    }
+    printf("Enter time : ");
+    gets(str);
+    value=check_tm(str);
+    printf("%d\n",value);
+    if(value==0)
+    {
+        printf("**** ***.\n");
+    }
+    else
+    {
+        printf("Time has been entered successfully!!!\n");
     }
     return 0;
 }

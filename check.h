@@ -138,7 +138,7 @@ int check_tm(char *time)
     p2=substr(time,3,4);
     hour=atoi(p1);
     minute=atoi(p2);
-    if(hour<=0||hour>12||minute<0||minute>60)
+    if(hour<=0||hour>12||minute<0||minute>59)
     {
         return 0;
     }

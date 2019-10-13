@@ -64,7 +64,6 @@ int check_dt(char *date)
    day=atoi(p1);
    month=atoi(p2);
    year=atoi(p3);
-   printf("%d %d %d\n",day,month,year);
    if(day>31||month>12||year>=3000||day<=0||month<=0||year<2000)
    {
        return 0;

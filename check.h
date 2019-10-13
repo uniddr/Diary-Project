@@ -43,7 +43,7 @@ int check_dt(char *date)
 {
    int k=0,day,month,year,i,c_digit=0,pos[8]={0,1,3,4,6,7,8,9};
    char *p1,*p2,*p3;
-   if(date[2]!='-'||date[5]!='-'||strlen(date)>10)
+   if(date[2]!='-'||date[5]!='-'||strlen(date)!=10)
    {
        return 0;
    }
@@ -119,7 +119,7 @@ int check_tm(char *time)
 {
     int k,c_digit=0,hour,minute,pos[4]={0,1,3,4};
     char *p1,*p2;
-    if(time[2]!='-'||strlen(time)>5)
+    if(time[2]!='-'||strlen(time)!=5)
     {
         return 0;
     }

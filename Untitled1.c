@@ -23,12 +23,12 @@ void addnote()
     FILE *fp;
     DIR *entdir;
     struct dirent *subdirread;
-    char dirname[25]={"./Notes/"},filename[25]={"./Notes/"};
-    printf("\n\t\t\t\t\t\t     ADD MENU\t\t\t\t\t  \n");
-    printf("\t\t\t\t    --------------------------------------------\t\t\t\t  ");
-    printf("\n\t\t\t\t     0   >>   To use system date and time\t\t\t\t\t\t  ");
-    printf("\n\t\t\t\t     1   >>   To use custom date and time\t\t\t\t\t\t  \n");
-    printf("\n\t\t\t\t     Enter your choice:  ");
+    char dirname[25]={"./Notes/"},filename[25]={"./Notes/"},c;
+    printf("\n\t\t\t\t\t\tADD MENU\t\t\t\t\t  \n");
+    printf("\t\t\t\t--------------------------------------------\t\t\t\t  ");
+    printf("\n\t\t\t\t 0   >>   To use system date and time\t\t\t\t\t\t  ");
+    printf("\n\t\t\t\t 1   >>   To use custom date and time\t\t\t\t\t\t  \n");
+    printf("\n\t\t\t\t Enter your choice:  ");
     scanf("%d",&ch);
     if(ch==0)
     {
@@ -98,6 +98,13 @@ void addnote()
         printf("Enter title: ");
         fflush(stdin);
         gets(e.title);
+        for(i=0;i<strlen(e.title);i++)
+        {
+            c=e.title[i];
+            c=c+4;
+            c=c^150;
+            e.title[i]=c;
+        }
         fputs(e.title,fp);
         fputs("\n",fp);
         for(i=0;i<strlen(e.title);i++)
@@ -108,6 +115,13 @@ void addnote()
         printf("\nEnter the note: ");
         fflush(stdin);
         gets(e.body);
+        for(i=0;i<strlen(e.body);i++)
+        {
+            c=e.body[i];
+            c=c+4;
+            c=c^150;
+            e.body[i]=c;
+        }
         fputs(e.body,fp);
         fclose(fp);
         closedir(entdir);
@@ -117,6 +131,16 @@ void addnote()
 }
 void viewnote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     int f=0,ch;
     long int choice;
@@ -157,7 +181,7 @@ void viewnote()
         choice=strtol(choice_check,&choice_remain,10);
         if((errno==ERANGE)||(choice==0 && errno!=0)||(choice_remain==choice_check)||(*choice_remain!='\n'))
         {
-            perror("Error");
+            perror("Error!  ");
             printf("Press any key to go back to main menu.\n");
             fflush(stdin);
             _getch();
@@ -210,7 +234,7 @@ void viewnote()
         choice=strtol(choice_check,&choice_remain,10);
         if((errno==ERANGE)||(choice==0 && errno!=0)||(choice_remain==choice_check)||(*choice_remain!='\n'))
         {
-            perror("Error");
+            printf("Error!  ");
             printf("Press any key to go back to main menu.\n");
             fflush(stdin);
             _getch();
@@ -242,6 +266,11 @@ void viewnote()
         {
             if((ch=fgetc(fp))!=EOF)
             {
+                if((ch!='\n')&&(ch!='-'))
+                {
+                    ch=ch^150;
+                    ch=ch-4;
+                }
                 putc(ch,stdout);
             }
             else
@@ -257,6 +286,16 @@ void viewnote()
 }
 void editnote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     entry e;
     int f=0,ch;
@@ -351,7 +390,7 @@ void editnote()
         choice=strtol(choice_check,&choice_remain,10);
         if((errno==ERANGE)||(choice==0 && errno!=0)||(choice_remain==choice_check)||(*choice_remain!='\n'))
         {
-            perror("Error");
+            printf("Error!");
             printf("Press any key to go back to main menu.\n");
             fflush(stdin);
             _getch();
@@ -408,6 +447,16 @@ void editnote()
 }
 void deletenote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     entry e;
     int f=0,ch,i;
@@ -531,7 +580,7 @@ void deletenote()
     fclose(fp);
     if((i=remove(pathname))==0)
     {
-        printf("\n\n\t\t\t\t     Entry deleted successfully! Press any key to return to main menu.\n");
+        printf("\n\n\t\t\t     Entry deleted successfully! Press any key to return to main menu.\n");
         _getch();
         return;
     }
@@ -542,29 +591,368 @@ void deletenote()
         return;
     }
 }
+int password()
+
+{
+
+    char pass[15]= {0},check[15]= {0},ch;
+
+    FILE *fpp;
+
+    int i=0,j;
+
+    printf("::FOR SECURITY PURPOSE::");
+
+    printf("::ONLY THREE TRIALS ARE ALLOWED::");
+
+    for(j=0; j<3; j++)
+
+    {
+
+        i=0;
+
+        printf("\n\n\tENTER THE PASSWORD:");
+
+        pass[0]=getch();
+
+        while(pass[i]!='\r')
+
+        {
+
+            if(pass[i]=='\b')
+
+            {
+
+                i--;
+
+                printf("\b");
+
+                printf(" ");
+
+                printf("\b");
+
+                pass[i]=getch();
+
+            }
+
+            else
+
+            {
+
+                printf("*");
+
+                i++;
+
+                pass[i]=getch();
+
+            }
+
+        }
+
+        pass[i]='\0';
+
+        fpp=fopen("SE","r");
+
+        if (fpp==NULL)
+
+        {
+
+            printf("\nERROR WITH THE SYSTEM FILE...[FILE MISSING]\n");
+
+            getch();
+
+            return 1;
+
+        }
+
+        else
+
+            i=0;
+
+        while(1)
+
+        {
+
+            ch=fgetc(fpp);
+
+            if(ch==EOF)
+
+            {
+
+                check[i]='\0';
+
+                break;
+
+            }
+
+            check[i]=ch-5;
+
+            i++;
+
+        }
+
+        if(strcmp(pass,check)==0)
+
+        {
+
+            printf("\n\n\tACCESS GRANTED...\n");
+
+            return 0;
+
+        }
+
+        else
+
+        {
+
+            printf("\n\n\tWRONG PASSWORD..\n\n\tACCESS DENIED...\n");
+
+        }
+
+    }
+
+    printf("\n\n\t::YOU ENTERED WRONG PASSWORD::YOU ARE NOT ALLOWED TO ACCESS ANY FILE::\n\n\tPRESS ANY KEY TO GO BACK...");
+
+    getch();
+
+    return 1;
+
+}
+void editpassword()
+
+{
+
+    system("cls");
+
+    printf("\n");
+
+    char pass[15]= {0},confirm[15]= {0},ch;
+
+    int choice,i,check;
+
+    FILE *fp;
+
+    fp=fopen("SE","rb");
+
+    if(fp==NULL)
+
+    {
+
+        fp=fopen("SE","wb");
+
+        if(fp==NULL)
+
+        {
+
+            printf("SYSTEM ERROR...");
+
+            getch();
+
+            return ;
+
+        }
+
+        fclose(fp);
+
+        printf("\nSYSTEM RESTORED...\nYOUR PASSWORD IS 'ENTER'\n PRESS ENTER TO CHANGE PASSWORD\n\n");
+
+        getch();
+
+    }
+
+    fclose(fp);
+
+    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
+    do
+
+    {
+
+        if(check==0)
+
+        {
+
+            i=0;
+
+            choice=0;
+
+            printf("\n\n\tENTER THE NEW PASSWORD:");
+
+            fflush(stdin);
+
+            pass[0]=getch();
+
+            while(pass[i]!='\r')
+
+            {
+
+                if(pass[i]=='\b')
+
+                {
+
+                    i--;
+
+                    printf("\b");
+
+                    printf(" ");
+
+                    printf("\b");
+
+                    pass[i]=getch();
+
+                }
+
+                else
+
+                {
+
+                    printf("*");
+
+                    i++;
+
+                    pass[i]=getch();
+
+                }
+
+            }
+
+            pass[i]='\0';
+
+            i=0;
+
+            printf("\n\tCONFIRM PASSWORD:");
+
+            confirm[0]=getch();
+
+            while(confirm[i]!='\r')
+
+            {
+
+                if(confirm[i]=='\b')
+
+                {
+
+                    i--;
+
+                    printf("\b");
+
+                    printf(" ");
+
+                    printf("\b");
+
+                    confirm[i]=getch();
+
+                }
+
+                else
+
+                {
+
+                    printf("*");
+
+                    i++;
+
+                    confirm[i]=getch();
+
+                }
+
+            }
+
+            confirm[i]='\0';
+
+            if(strcmp(pass,confirm)==0)
+
+            {
+
+                fp=fopen("SE","wb");
+
+                if(fp==NULL)
+
+                {
+
+                    printf("\n\t\tSYSTEM ERROR");
+
+                    getch();
+
+                    return ;
+
+                }
+
+                i=0;
+
+                while(pass[i]!='\0')
+
+                {
+
+                    ch=pass[i];
+
+                    putc(ch+5,fp);
+
+                    i++;
+
+                }
+
+                putc(EOF,fp);
+
+                fclose(fp);
+
+            }
+
+            else
+
+            {
+
+                printf("\n\tTHE NEW PASSWORD DOES NOT MATCH.");
+
+                choice=1;
+
+            }
+
+        }
+
+    }
+    while(choice==1);
+
+    printf("\n\n\tPASSWORD CHANGED...\n\n\tPRESS ANY KEY TO GO BACK...");
+
+    getch();
+
+}
 
 int main(int argc,char *argv[])
 {
+
     int t,j,c;
     while(1)
     {
-        printf("\n\t\t\t\t    --------------------------------------------\t\t\t\t  ");
-        printf("\n\n\t\t\t\t\t  Welcome To Your Own Personal Diary\t\t\t\t  \n");
-        printf("\n\t\t\t\t    --------------------------------------------\t\t\t\t  ");
-        printf("\n\t\t\t\t\t\t     Main Menu\t\t\t\t\t  \n");
-        printf("\n\t\t\t\t     0   >>   Exit Program\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     1   >>   Add Record\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     2   >>   View Record\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     3   >>   Edit Record\t\t\t\t\t\t  ");
-        printf("\n\t\t\t\t     4   >>   Delete Record\t\t\t\t\t\t  \n");
-        printf("\n\t\t\t\t     Enter your choice:  ");
+        printf("\n\t\t\t--------------------------------------------\t\t\t\t  ");
+        printf("\n\n\t\t\t\tWelcome To Your Own Personal Diary\t\t\t\t  \n");
+        printf("\n\t\t\t--------------------------------------------\t\t\t\t  ");
+        printf("\n\t\t\t\t\t Main Menu\t\t\t\t\t  \n");
+        printf("\n\t\t\t 0   >>   Exit Program\t\t\t\t\t\t  ");
+        printf("\n\t\t\t 1   >>   Add Record\t\t\t\t\t\t  ");
+        printf("\n\t\t\t 2   >>   View Record\t\t\t\t\t\t  ");
+        printf("\n\t\t\t 3   >>   Edit Record\t\t\t\t\t\t  ");
+        printf("\n\t\t\t 4   >>   Delete Record\t\t\t\t\t\t " );
+        printf("\n\t\t\t 5   >>   GIVE PASSWORD\t\t\t\t\t\t  ");
+        printf("\n\t\t\t 6   >>   EDIT PASSWORD\t\t\t\t\t\t  \n");
+
+        printf("\n\t\t\t Enter your choice:  ");
         scanf("%d",&c);
 
         switch(c)
         {
         case 0:
             system("cls");
-            printf("\n\n\t\t\t\t\t  Thank you for using the software! \n\n\n\n");
+            printf("\n\n\t\t\t\t\tThank you for using the software! \n\n\n\n");
             exit(1);
 
         case 1:
@@ -581,6 +969,12 @@ int main(int argc,char *argv[])
 
         case 4:
             deletenote();
+            break;
+        case 5:
+            password();
+            break;
+        case 6:
+            editpassword();
             break;
 
         default:

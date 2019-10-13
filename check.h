@@ -89,7 +89,6 @@ int check_dt(char *date)
    else if(month==2)
    {
        i=leapyear(year);
-       printf("i=%d\n",i);
        if(i==0)
        {
            if(1<=day&&day<=28)

@@ -131,6 +131,16 @@ void addnote()
 }
 void viewnote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     int f=0,ch;
     long int choice;
@@ -276,6 +286,16 @@ void viewnote()
 }
 void editnote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     entry e;
     int f=0,ch;
@@ -427,6 +447,16 @@ void editnote()
 }
 void deletenote()
 {
+    int    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
     system("cls");
     entry e;
     int f=0,ch,i;
@@ -561,9 +591,352 @@ void deletenote()
         return;
     }
 }
+int password()
+
+{
+
+    char pass[15]= {0},check[15]= {0},ch;
+
+    FILE *fpp;
+
+    int i=0,j;
+
+    printf("::FOR SECURITY PURPOSE::");
+
+    printf("::ONLY THREE TRIALS ARE ALLOWED::");
+
+    for(j=0; j<3; j++)
+
+    {
+
+        i=0;
+
+        printf("\n\n\tENTER THE PASSWORD:");
+
+        pass[0]=getch();
+
+        while(pass[i]!='\r')
+
+        {
+
+            if(pass[i]=='\b')
+
+            {
+
+                i--;
+
+                printf("\b");
+
+                printf(" ");
+
+                printf("\b");
+
+                pass[i]=getch();
+
+            }
+
+            else
+
+            {
+
+                printf("*");
+
+                i++;
+
+                pass[i]=getch();
+
+            }
+
+        }
+
+        pass[i]='\0';
+
+        fpp=fopen("SE","r");
+
+        if (fpp==NULL)
+
+        {
+
+            printf("\nERROR WITH THE SYSTEM FILE...[FILE MISSING]\n");
+
+            getch();
+
+            return 1;
+
+        }
+
+        else
+
+            i=0;
+
+        while(1)
+
+        {
+
+            ch=fgetc(fpp);
+
+            if(ch==EOF)
+
+            {
+
+                check[i]='\0';
+
+                break;
+
+            }
+
+            check[i]=ch-5;
+
+            i++;
+
+        }
+
+        if(strcmp(pass,check)==0)
+
+        {
+
+            printf("\n\n\tACCESS GRANTED...\n");
+
+            return 0;
+
+        }
+
+        else
+
+        {
+
+            printf("\n\n\tWRONG PASSWORD..\n\n\tACCESS DENIED...\n");
+
+        }
+
+    }
+
+    printf("\n\n\t::YOU ENTERED WRONG PASSWORD::YOU ARE NOT ALLOWED TO ACCESS ANY FILE::\n\n\tPRESS ANY KEY TO GO BACK...");
+
+    getch();
+
+    return 1;
+
+}
+void editpassword()
+
+{
+
+    system("cls");
+
+    printf("\n");
+
+    char pass[15]= {0},confirm[15]= {0},ch;
+
+    int choice,i,check;
+
+    FILE *fp;
+
+    fp=fopen("SE","rb");
+
+    if(fp==NULL)
+
+    {
+
+        fp=fopen("SE","wb");
+
+        if(fp==NULL)
+
+        {
+
+            printf("SYSTEM ERROR...");
+
+            getch();
+
+            return ;
+
+        }
+
+        fclose(fp);
+
+        printf("\nSYSTEM RESTORED...\nYOUR PASSWORD IS 'ENTER'\n PRESS ENTER TO CHANGE PASSWORD\n\n");
+
+        getch();
+
+    }
+
+    fclose(fp);
+
+    check=password();
+
+    if(check==1)
+
+    {
+
+        return ;
+
+    }
+
+    do
+
+    {
+
+        if(check==0)
+
+        {
+
+            i=0;
+
+            choice=0;
+
+            printf("\n\n\tENTER THE NEW PASSWORD:");
+
+            fflush(stdin);
+
+            pass[0]=getch();
+
+            while(pass[i]!='\r')
+
+            {
+
+                if(pass[i]=='\b')
+
+                {
+
+                    i--;
+
+                    printf("\b");
+
+                    printf(" ");
+
+                    printf("\b");
+
+                    pass[i]=getch();
+
+                }
+
+                else
+
+                {
+
+                    printf("*");
+
+                    i++;
+
+                    pass[i]=getch();
+
+                }
+
+            }
+
+            pass[i]='\0';
+
+            i=0;
+
+            printf("\n\tCONFIRM PASSWORD:");
+
+            confirm[0]=getch();
+
+            while(confirm[i]!='\r')
+
+            {
+
+                if(confirm[i]=='\b')
+
+                {
+
+                    i--;
+
+                    printf("\b");
+
+                    printf(" ");
+
+                    printf("\b");
+
+                    confirm[i]=getch();
+
+                }
+
+                else
+
+                {
+
+                    printf("*");
+
+                    i++;
+
+                    confirm[i]=getch();
+
+                }
+
+            }
+
+            confirm[i]='\0';
+
+            if(strcmp(pass,confirm)==0)
+
+            {
+
+                fp=fopen("SE","wb");
+
+                if(fp==NULL)
+
+                {
+
+                    printf("\n\t\tSYSTEM ERROR");
+
+                    getch();
+
+                    return ;
+
+                }
+
+                i=0;
+
+                while(pass[i]!='\0')
+
+                {
+
+                    ch=pass[i];
+
+                    putc(ch+5,fp);
+
+                    i++;
+
+                }
+
+                putc(EOF,fp);
+
+                fclose(fp);
+
+            }
+
+            else
+
+            {
+
+                printf("\n\tTHE NEW PASSWORD DOES NOT MATCH.");
+
+                choice=1;
+
+            }
+
+        }
+
+    }
+    while(choice==1);
+
+    printf("\n\n\tPASSWORD CHANGED...\n\n\tPRESS ANY KEY TO GO BACK...");
+
+    getch();
+
+}
 
 int main(int argc,char *argv[])
 {
+     printf("\n\t\t\t--------------------------------------------\t\t\t\t  ");
+        printf("\n\n\t\t\t\tWelcome To Your Own Personal Diary\t\t\t\t  \n");
+        printf("\n\t\t\t--------------------------------------------\t\t\t\t\n  ");
+    int  check = password();
+    if(check==1)
+    {
+        return;
+    }
     int t,j,c;
     while(1)
     {
@@ -576,6 +949,9 @@ int main(int argc,char *argv[])
         printf("\n\t\t\t 2   >>   View Record\t\t\t\t\t\t  ");
         printf("\n\t\t\t 3   >>   Edit Record\t\t\t\t\t\t  ");
         printf("\n\t\t\t 4   >>   Delete Record\t\t\t\t\t\t  \n");
+        printf("\n\t\t\t\t 5   >>   GIVE PASSWORD\t\t\t\t\t\t  ");
+        printf("\n\t\t\t\t 6   >>   EDIT PASSWORD\t\t\t\t\t\t  \n");
+
         printf("\n\t\t\t Enter your choice:  ");
         scanf("%d",&c);
 
